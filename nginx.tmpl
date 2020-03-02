@@ -182,12 +182,12 @@ upstream {{ $upstream_name }} {
 			{{ if (and (ne $containerNetwork.Name "ingress") (or (eq $knownNetwork.Name $containerNetwork.Name) (eq $knownNetwork.Name "host"))) }}
 				## Can be connected with "{{ $containerNetwork.Name }}" network
 
-                {{ $split_host_port := split $host ":" }}
-                {{ if (and $is_specific_port (eq (len $split_host_port) 2)) }}
-                {{/* If ports per virtual host specified, use that */}}
-                    {{ $port := index $split_host_port 1 }}
-                    {{ $address := where $container.Addresses "Port" $port | first }}
-                    {{ template "upstream" (dict "Container" $container "Address" $address "Network" $containerNetwork) }}
+				{{ $split_host_port := split $host ":" }}
+				{{ if (and $is_specific_port (eq (len $split_host_port) 2)) }}
+				{{/* If ports per virtual host specified, use that */}}
+					{{ $port := index $split_host_port 1 }}
+					{{ $address := where $container.Addresses "Port" $port | first }}
+					{{ template "upstream" (dict "Container" $container "Address" $address "Network" $containerNetwork) }}
 				{{/* If only 1 port exposed, use that */}}
 				{{ else if eq $addrLen 1 }}
 					{{ $address := index $container.Addresses 0 }}
